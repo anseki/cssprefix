@@ -46,5 +46,6 @@ console.log(value); // -> "block" on Chrome, "-moz-inline-grid" on Firefox
 ```
 
 ## History
+ * 2014-10-09			v0.2.1			Remove the prefix from argument.
  * 2014-10-09			v0.2.0			Support multiple `wantedValue`s of `setStyleValue`.
  * 2014-09-05			v0.1.0			Initial release.

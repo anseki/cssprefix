@@ -11,6 +11,7 @@
 (function(undefined) {
   var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
     PREFIXES_PROP = [], PREFIXES_VALUE = [],
+    rePrefixesProp, rePrefixesValue,
     props = {}, values = {}; // cache
 
   function ucf(text) { return text.substr(0, 1).toUpperCase() + text.substr(1); }
@@ -21,8 +22,22 @@
     PREFIXES_VALUE.push('-' + prefix + '-');
   });
 
+  rePrefixesProp = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i');
+  function removePrefixesProp(prop) {
+    var reUc = /[A-Z]/;
+    return prop.replace(rePrefixesProp, function(str, p1) {
+      return reUc.test(p1) ? p1.toLowerCase() : str;
+    });
+  }
+
+  rePrefixesValue = new RegExp('^(?:' + PREFIXES_VALUE.join('|') + ')', 'i');
+  function removePrefixesValue(value) {
+    return value.replace(rePrefixesValue, '');
+  }
+
   window.getStyleProp = function(prop, elm) {
     var style, ucfProp;
+    prop = removePrefixesProp(prop);
     if (props[prop] === undefined) {
       style = elm.style;
 
@@ -56,6 +71,7 @@
 
     values[prop] = values[prop] || {};
     if (!valueArray.some(function(value) {
+          value = removePrefixesValue(value);
           if (values[prop][value] === undefined) {
 
             if (trySet(prop, value)) { // original
