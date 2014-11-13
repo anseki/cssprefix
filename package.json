@@ -1,6 +1,6 @@
 {
   "name": "cssprefix",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "title": "cssPrefix",
   "description": "CSS Prefixer for JavaScript code. The small snipet that get or set vendor-prefixed CSS property or CSS value. This is not pre-compiler for CSS Style Sheet, this is used for handling those in JavaScript code.",
   "keywords": [
