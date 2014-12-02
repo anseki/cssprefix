@@ -8,7 +8,7 @@
  * Licensed under the MIT license.
  */
 
-(function(undefined) {
+;(function(undefined) {
   var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
     PREFIXES_PROP = [], PREFIXES_VALUE = [],
     rePrefixesProp, rePrefixesValue,
@@ -23,21 +23,24 @@
   });
 
   rePrefixesProp = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i');
-  function removePrefixesProp(prop) {
+  function normalizeProp(prop) {
     var reUc = /[A-Z]/;
-    return prop.replace(rePrefixesProp, function(str, p1) {
-      return reUc.test(p1) ? p1.toLowerCase() : str;
-    });
+    // 'ms' and 'Ms' are found by rePrefixesProp. 'i' option
+    return prop.replace(/-([\da-z])/gi, function(str, p1) { // camelCase
+        return p1.toUpperCase();
+      }).replace(rePrefixesProp, function(str, p1) {
+        return reUc.test(p1) ? p1.toLowerCase() : str;
+      });
   }
 
   rePrefixesValue = new RegExp('^(?:' + PREFIXES_VALUE.join('|') + ')', 'i');
-  function removePrefixesValue(value) {
+  function normalizeValue(value) {
     return value.replace(rePrefixesValue, '');
   }
 
-  window.getStyleProp = function(prop, elm) {
+  function getStyleProp(prop, elm) {
     var style, ucfProp;
-    prop = removePrefixesProp(prop);
+    prop = normalizeProp(prop);
     if (props[prop] === undefined) {
       style = elm.style;
 
@@ -58,9 +61,9 @@
 
     }
     return props[prop];
-  };
+  }
 
-  window.setStyleValue = function(elm, prop, value) {
+  function setStyleValue(elm, prop, value) {
     var res, style = elm.style,
       valueArray = Array.isArray(value) ? value : [value];
 
@@ -69,9 +72,10 @@
       return style[prop] === value;
     }
 
+    if (!(prop = getStyleProp(prop, elm))) { return ''; } // Invalid Property
     values[prop] = values[prop] || {};
     if (!valueArray.some(function(value) {
-          value = removePrefixesValue(value);
+          value = normalizeValue(value);
           if (values[prop][value] === undefined) {
 
             if (trySet(prop, value)) { // original
@@ -98,5 +102,8 @@
       res = '';
     }
     return res;
-  };
+  }
+
+  window.getStyleProp = getStyleProp;
+  window.setStyleValue = setStyleValue;
 })();
