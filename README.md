@@ -9,7 +9,7 @@ This is not pre-compiler for CSS Style Sheet, this is used for handling those in
 
 `getStyleProp` method and `setStyleValue` method are provided to global scope (i.e. window).
 
-### `getStyleProp`
+### getStyleProp
 
 ```js
 property = getStyleProp(wantedProperty, elment)
@@ -27,7 +27,7 @@ property = getStyleProp('columnWidth', elment);
 console.log(property); // -> "webkitColumnWidth" on Chrome, "MozColumnWidth" on Firefox
 ```
 
-### `setStyleValue`
+### setStyleValue
 
 ```js
 value = setStyleValue(elment, property, wantedValue)
