@@ -1,7 +1,6 @@
 # cssPrefix
 
-CSS Prefixer for JavaScript code.
-
+CSS Prefixer for JavaScript code.  
 The small snipet that get or set vendor-prefixed CSS property or CSS value.  
 This is not pre-compiler for CSS Style Sheet, this is used to handle those in JavaScript code.
 
