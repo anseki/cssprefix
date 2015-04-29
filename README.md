@@ -3,51 +3,59 @@
 CSS Prefixer for JavaScript code.
 
 The small snipet that get or set vendor-prefixed CSS property or CSS value.  
-This is not pre-compiler for CSS Style Sheet, this is used for handling those in JavaScript code.
+This is not pre-compiler for CSS Style Sheet, this is used to handle those in JavaScript code.
 
 ## Methods
 
-`getStyleProp` method and `setStyleValue` method are provided to global scope (i.e. window).
+The following methods are added to the global scope (i.e. `window`).
 
-### getStyleProp
+### `getStyleProp`
 
 ```js
 property = getStyleProp(wantedProperty, elment)
 ```
 
-Return the vendor-prefixed CSS property, or original property that doesn't require vendor-prefix. If nothing was found, the empty string is returned.
+Return a vendor-prefixed CSS property, or an original property that doesn't require vendor-prefix. If nothing was found, return an empty string.
 
-Example:
+For example:
 
 ```js
 property = getStyleProp('animation', elment);
-console.log(property); // -> "webkitAnimation" on Chrome, "animation" on Firefox
+console.log(property);
+// -> "webkitAnimation" on Chrome
+// -> "animation" on Firefox
 
 property = getStyleProp('columnWidth', elment);
-console.log(property); // -> "webkitColumnWidth" on Chrome, "MozColumnWidth" on Firefox
+console.log(property);
+// -> "webkitColumnWidth" on Chrome
+// -> "MozColumnWidth" on Firefox
 ```
 
-### setStyleValue
+### `setStyleValue`
 
 ```js
 value = setStyleValue(elment, property, wantedValue)
 ```
 
-Try to set CSS value, and return the vendor-prefixed CSS value, or original value that doesn't require vendor-prefix. If `wantedValue` is Array, try each element present in the Array until one can set. If nothing could set, the empty string is returned.
+Try to set a CSS value, and return a vendor-prefixed CSS value, or an original value that doesn't require vendor-prefix. If `wantedValue` is an Array, try it with each element until any of them succeeded. If nothing could set, return an empty string.
 
-Example:
+For example:
 
 ```js
 value = setStyleValue(elment, 'listStyleType', 'arabic-indic');
-console.log(value); // -> "arabic-indic" on Chrome, "-moz-arabic-indic" on Firefox
+console.log(value);
+// -> "arabic-indic" on Chrome
+// -> "-moz-arabic-indic" on Firefox
 
 value = setStyleValue(elment, 'display', ['inline-grid', 'block']);
-console.log(value); // -> "block" on Chrome, "-moz-inline-grid" on Firefox
+console.log(value);
+// -> "block" on Chrome
+// -> "-moz-inline-grid" on Firefox
 ```
 
-## cssPrefix vs. jQuery
+## Differences from jQuery
 
-jQuery's `css()` also can find the vendor-prefixed CSS property. But jQuery can't find the vendor-prefixed CSS value. And your code can't get the vendor-prefixed CSS property that found by jQuery.  
+jQuery's `css()` also can find the vendor-prefixed CSS property. But jQuery can't find the vendor-prefixed CSS **value**. And your code can't get the vendor-prefixed CSS property that found by jQuery.  
 And jQuery doesn't have cache. It gives an effect of the performance.
 
 ![sample](benchmark.png)
@@ -84,9 +92,3 @@ function cpValue() {
   setStyleValue(elmCp, 'cursor', 'grabbing');
 }
 ```
-
-## History
- * 2014-12-02			v0.2.6			Accept raw properties.
- * 2014-10-09			v0.2.1			Remove the prefix from argument.
- * 2014-10-09			v0.2.0			Support multiple `wantedValue`s of `setStyleValue`.
- * 2014-09-05			v0.1.0			Initial release.
