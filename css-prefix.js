@@ -26,11 +26,11 @@
   function normalizeProp(prop) {
     var reUc = /[A-Z]/;
     // 'ms' and 'Ms' are found by rePrefixesProp. 'i' option
-    return prop.replace(/-([\da-z])/gi, function(str, p1) { // camelCase
+    return (prop = prop.replace(/-([\da-z])/gi, function(str, p1) { // camelCase
         return p1.toUpperCase();
       }).replace(rePrefixesProp, function(str, p1) {
         return reUc.test(p1) ? p1.toLowerCase() : str;
-      });
+      })).toLowerCase() === 'float' ? 'cssFloat' : prop; // for old CSSOM
   }
 
   rePrefixesValue = new RegExp('^(?:' + PREFIXES_VALUE.join('|') + ')', 'i');
