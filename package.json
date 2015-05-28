@@ -1,6 +1,6 @@
 {
   "name": "cssprefix",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "title": "cssPrefix",
   "description": "CSS Prefixer for JavaScript code. The small snipet that get or set vendor-prefixed CSS property or CSS value. This is not pre-compiler for CSS Style Sheet, this is used to handle those in JavaScript code.",
   "keywords": [
@@ -16,7 +16,7 @@
     "url": "git://github.com/anseki/css-prefix.git"
   },
   "bugs": "https://github.com/anseki/css-prefix/issues",
-  "licenses": "MIT",
+  "license": "MIT",
   "author": {
     "name": "anseki",
     "url": "https://github.com/anseki"
