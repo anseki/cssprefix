@@ -8,7 +8,7 @@
  * Licensed under the MIT license.
  */
 
-;(function(undefined) {
+;(function(global, undefined) {
   var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
     PREFIXES_PROP = [], PREFIXES_VALUE = [],
     rePrefixesProp, rePrefixesValue,
@@ -104,6 +104,10 @@
     return res;
   }
 
-  window.getStyleProp = getStyleProp;
-  window.setStyleValue = setStyleValue;
-})();
+  global.getStyleProp = getStyleProp;
+  global.setStyleValue = setStyleValue;
+})(
+/* jshint evil:true, newcap:false */
+Function('return this')()
+/* jshint evil:false, newcap:true */
+);
