@@ -4,11 +4,17 @@
  *
  * export: getStyleProp, setStyleValue
  *
- * Copyright (c) 2015 anseki
+ * Copyright (c) 2016 anseki
  * Licensed under the MIT license.
  */
 
-;(function(global, undefined) {
+/* exported getStyleProp, setStyleValue */
+
+var getStyleProp, setStyleValue;
+
+(function() {
+  'use strict';
+
   var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
     PREFIXES_PROP = [], PREFIXES_VALUE = [],
     rePrefixesProp, rePrefixesValue,
@@ -27,10 +33,10 @@
     var reUc = /[A-Z]/;
     // 'ms' and 'Ms' are found by rePrefixesProp. 'i' option
     return (prop = prop.replace(/-([\da-z])/gi, function(str, p1) { // camelCase
-        return p1.toUpperCase();
-      }).replace(rePrefixesProp, function(str, p1) {
-        return reUc.test(p1) ? p1.toLowerCase() : str;
-      })).toLowerCase() === 'float' ? 'cssFloat' : prop; // for old CSSOM
+      return p1.toUpperCase();
+    }).replace(rePrefixesProp, function(str, p1) {
+      return reUc.test(p1) ? p1.toLowerCase() : str;
+    })).toLowerCase() === 'float' ? 'cssFloat' : prop; // for old CSSOM
   }
 
   rePrefixesValue = new RegExp('^(?:' + PREFIXES_VALUE.join('|') + ')', 'i');
@@ -38,32 +44,33 @@
     return value.replace(rePrefixesValue, '');
   }
 
-  function getStyleProp(prop, elm) {
+  getStyleProp = function(prop, elm) {
     var style, ucfProp;
     prop = normalizeProp(prop);
-    if (props[prop] === undefined) {
+    if (props[prop] == null) {
       style = elm.style;
 
-      if (style[prop] !== undefined) { // original
+      if (style[prop] != null) { // original
         props[prop] = prop;
       } else { // try with prefixes
         ucfProp = ucf(prop);
         if (!PREFIXES_PROP.some(function(prefix) {
-              var prefixed = prefix + ucfProp;
-              if (style[prefixed] !== undefined) {
-                props[prop] = prefixed;
-                return true;
-              }
-            })) {
+          var prefixed = prefix + ucfProp;
+          if (style[prefixed] != null) {
+            props[prop] = prefixed;
+            return true;
+          }
+          return false;
+        })) {
           props[prop] = '';
         }
       }
 
     }
     return props[prop];
-  }
+  };
 
-  function setStyleValue(elm, prop, value) {
+  setStyleValue = function(elm, prop, value) {
     var res, style = elm.style,
       valueArray = Array.isArray(value) ? value : [value];
 
@@ -75,39 +82,35 @@
     if (!(prop = getStyleProp(prop, elm))) { return ''; } // Invalid Property
     values[prop] = values[prop] || {};
     if (!valueArray.some(function(value) {
-          value = normalizeValue(value);
-          if (values[prop][value] === undefined) {
+      value = normalizeValue(value);
+      if (values[prop][value] == null) {
 
-            if (trySet(prop, value)) { // original
-              res = values[prop][value] = value;
-              return true;
-            } else if (PREFIXES_VALUE.some(function(prefix) { // try with prefixes
-                  var prefixed = prefix + value;
-                  if (trySet(prop, prefixed)) {
-                    res = values[prop][value] = prefixed;
-                    return true;
-                  }
-                })) {
-              return true;
-            } else {
-              values[prop][value] = '';
-              return; // continue to next value
-            }
-
-          } else if (values[prop][value]) {
-            style[prop] = res = values[prop][value];
+        if (trySet(prop, value)) { // original
+          res = values[prop][value] = value;
+          return true;
+        } else if (PREFIXES_VALUE.some(function(prefix) { // try with prefixes
+          var prefixed = prefix + value;
+          if (trySet(prop, prefixed)) {
+            res = values[prop][value] = prefixed;
             return true;
           }
+          return false;
         })) {
+          return true;
+        } else {
+          values[prop][value] = '';
+          return false; // continue to next value
+        }
+
+      } else if (values[prop][value]) {
+        style[prop] = res = values[prop][value];
+        return true;
+      }
+      return false;
+    })) {
       res = '';
     }
     return res;
-  }
+  };
 
-  global.getStyleProp = getStyleProp;
-  global.setStyleValue = setStyleValue;
-})(
-/* jshint evil:true, newcap:false */
-Function('return this')()
-/* jshint evil:false, newcap:true */
-);
+})();
