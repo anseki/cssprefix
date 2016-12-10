@@ -1,17 +1,23 @@
-# cssPrefix
+# CSSPrefix
 
 CSS Prefixer for JavaScript code.  
 The small snipet that get or set vendor-prefixed CSS property or CSS value.  
 This is not pre-compiler for CSS, this is used to handle those in JavaScript code.
 
+## Usage
+
+Load CSSPrefix into your web page.
+
+```html
+<script src="css-prefix.min.js"></script>
+```
+
 ## Methods
 
-The following methods are added to the global scope (i.e. `window`).
-
-### `getStyleProp`
+### `CSSPrefix.getProp`
 
 ```js
-property = getStyleProp(wantedProperty, element)
+property = CSSPrefix.getProp(wantedProperty, element)
 ```
 
 Return a vendor-prefixed CSS property, or an original property that doesn't require vendor-prefix. If nothing was found, return an empty string.
@@ -19,21 +25,21 @@ Return a vendor-prefixed CSS property, or an original property that doesn't requ
 For example:
 
 ```js
-property = getStyleProp('animation', element);
+property = CSSPrefix.getProp('text-emphasis', element);
 console.log(property);
-// -> "webkitAnimation" on Chrome
-// -> "animation" on Firefox
+// -> "webkitTextEmphasis" on Chrome
+// -> "textEmphasis" on Firefox
 
-property = getStyleProp('columnWidth', element);
+property = CSSPrefix.getProp('column-count', element);
 console.log(property);
-// -> "webkitColumnWidth" on Chrome
-// -> "MozColumnWidth" on Firefox
+// -> "columnCount" on Chrome
+// -> "MozColumnCount" on Firefox
 ```
 
-### `setStyleValue`
+### `CSSPrefix.setValue`
 
 ```js
-value = setStyleValue(element, property, wantedValue)
+value = CSSPrefix.setValue(element, property, wantedValue)
 ```
 
 Try to set a CSS value, and return a vendor-prefixed CSS value, or an original value that doesn't require vendor-prefix. If `wantedValue` is an Array that includes multiple values, try it with each value until any of them succeeded. If nothing could set, return an empty string.
@@ -41,12 +47,12 @@ Try to set a CSS value, and return a vendor-prefixed CSS value, or an original v
 For example:
 
 ```js
-value = setStyleValue(element, 'listStyleType', 'arabic-indic');
+value = CSSPrefix.setValue(element, 'cursor', 'grab');
 console.log(value);
-// -> "arabic-indic" on Chrome
-// -> "-moz-arabic-indic" on Firefox
+// -> "-webkit-grab" on Chrome
+// -> "grab" on Firefox
 
-value = setStyleValue(element, 'display', ['inline-grid', 'block']);
+value = CSSPrefix.setValue(element, 'display', ['inline-grid', 'block']);
 console.log(value);
 // -> "block" on Chrome
 // -> "-moz-inline-grid" on Firefox
@@ -72,10 +78,10 @@ function jqProp() {
   elmJq.css('column-width', '10px');
 }
 
-// cssPrefix CSS property
+// CSSPrefix CSS property
 function cpProp() {
-  elmCp.style[getStyleProp('column-width', elmCp)] = '5px';
-  elmCp.style[getStyleProp('column-width', elmCp)] = '10px';
+  elmCp.style[CSSPrefix.getProp('column-width', elmCp)] = '5px';
+  elmCp.style[CSSPrefix.getProp('column-width', elmCp)] = '10px';
 }
 
 // jQuery CSS value
@@ -85,9 +91,13 @@ function jqValue() {
   elmJq.css('cursor', 'grabbing,-webkit-grabbing');
 }
 
-// cssPrefix CSS value
+// CSSPrefix CSS value
 function cpValue() {
-  setStyleValue(elmCp, 'cursor', 'grab');
-  setStyleValue(elmCp, 'cursor', 'grabbing');
+  CSSPrefix.setValue(elmCp, 'cursor', 'grab');
+  CSSPrefix.setValue(elmCp, 'cursor', 'grabbing');
 }
 ```
+
+## Old APIs
+
+Old APIs `getStyleProp` and `setStyleValue` are still supported.

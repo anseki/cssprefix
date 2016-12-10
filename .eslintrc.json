@@ -1,0 +1,8 @@
+{
+  "root": true,
+  "extends": [
+    "../../_common/eslintrc.json",
+    "../../_common/eslintrc-webpack.json"
+  ],
+  "env": {"node": true, "es6": true}
+}

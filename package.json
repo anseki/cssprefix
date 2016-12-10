@@ -1,7 +1,7 @@
 {
   "name": "cssprefix",
-  "version": "0.2.14",
-  "title": "cssPrefix",
+  "version": "0.3.0",
+  "title": "CSSPrefix",
   "description": "CSS Prefixer for JavaScript code. The small snipet that get or set vendor-prefixed CSS property or CSS value. This is not pre-compiler for CSS, this is used to handle those in JavaScript code.",
   "keywords": [
     "css",
@@ -10,6 +10,18 @@
     "property",
     "value"
   ],
+  "main": "./src/css-prefix.js",
+  "devDependencies": {
+    "babel-core": "^6.20.0",
+    "babel-loader": "^6.2.9",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.18.0",
+    "webpack": "^1.13.3"
+  },
+  "scripts": {
+    "build": "webpack --mode=build",
+    "dev": "webpack --mode=dev"
+  },
   "homepage": "https://github.com/anseki/css-prefix",
   "repository": {
     "type": "git",
