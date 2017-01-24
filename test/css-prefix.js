@@ -110,7 +110,7 @@ rePrefixesProp = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i');
 function normalizeProp(prop) {
   var reUc = /[A-Z]/;
   // 'ms' and 'Ms' are found by rePrefixesProp. 'i' option
-  return (prop = prop.replace(/-([\da-z])/gi, function (str, p1) {
+  return (prop = (prop + '').replace(/-([\da-z])/gi, function (str, p1) {
     // camelCase
     return p1.toUpperCase();
   }).replace(rePrefixesProp, function (str, p1) {
@@ -120,7 +120,7 @@ function normalizeProp(prop) {
 
 rePrefixesValue = new RegExp('^(?:' + PREFIXES_VALUE.join('|') + ')', 'i');
 function normalizeValue(value) {
-  return value.replace(rePrefixesValue, '');
+  return (value + '').replace(rePrefixesValue, '');
 }
 
 function getProp(prop, elm) {
