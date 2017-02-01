@@ -1,5 +1,7 @@
 # CSSPrefix
 
+[![npm](https://img.shields.io/npm/v/cssprefix.svg)](https://www.npmjs.com/package/cssprefix) [![GitHub issues](https://img.shields.io/github/issues/anseki/css-prefix.svg)](https://github.com/anseki/css-prefix/issues) [![dependencies](https://img.shields.io/badge/dependencies-No%20dependency-brightgreen.svg)](package.json) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)
+
 CSS Prefixer for JavaScript code.  
 The small snipet that get or set vendor-prefixed CSS property or CSS value.  
 This is not pre-compiler for CSS, this is used to handle those in JavaScript code.
