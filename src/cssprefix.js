@@ -1,6 +1,6 @@
 /*
  * CSSPrefix
- * https://github.com/anseki/css-prefix
+ * https://github.com/anseki/cssprefix
  *
  * Copyright (c) 2017 anseki
  * Licensed under the MIT license.

@@ -9,11 +9,11 @@
     "property",
     "value"
   ],
-  "main": "css-prefix.min.js",
-  "homepage": "https://github.com/anseki/css-prefix",
+  "main": "cssprefix.min.js",
+  "homepage": "https://github.com/anseki/cssprefix",
   "repository": {
     "type": "git",
-    "url": "git://github.com/anseki/css-prefix.git"
+    "url": "git://github.com/anseki/cssprefix.git"
   },
   "moduleType": [],
   "ignore": [

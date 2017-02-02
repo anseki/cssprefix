@@ -16,11 +16,11 @@ const webpack = require('webpack'),
   };
 
 module.exports = {
-  // entry: './src/css-prefix.js',
+  // entry: './src/cssprefix.js',
   entry: './src/compatible.js', // for Old APIs
   output: {
     path: BUILD ? __dirname : path.join(__dirname, 'test'),
-    filename: BUILD ? 'css-prefix.min.js' : 'css-prefix.js',
+    filename: BUILD ? 'cssprefix.min.js' : 'cssprefix.js',
     library: 'CSSPrefix',
     libraryTarget: 'var'
   },

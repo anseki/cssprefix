@@ -79,7 +79,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 /*
  * CSSPrefix
- * https://github.com/anseki/css-prefix
+ * https://github.com/anseki/cssprefix
  *
  * Copyright (c) 2017 anseki
  * Licensed under the MIT license.
@@ -216,20 +216,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _cssPrefix = __webpack_require__(0);
+var _cssprefix = __webpack_require__(0);
 
-var _cssPrefix2 = _interopRequireDefault(_cssPrefix);
+var _cssprefix2 = _interopRequireDefault(_cssprefix);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-window.getStyleProp = _cssPrefix2.default.getProp; /*
+window.getStyleProp = _cssprefix2.default.getProp; /*
                                                     * Old APIs: getStyleProp, setStyleValue
                                                     */
 
-window.setStyleValue = _cssPrefix2.default.setValue;
-exports.default = _cssPrefix2.default;
+window.setStyleValue = _cssprefix2.default.setValue;
+exports.default = _cssprefix2.default;
 module.exports = exports['default'];
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=css-prefix.js.map
+//# sourceMappingURL=cssprefix.js.map

@@ -10,8 +10,8 @@
     "property",
     "value"
   ],
-  "main": "css-prefix.min.js",
-  "jsnext:main": "./src/css-prefix.js",
+  "main": "cssprefix.min.js",
+  "jsnext:main": "./src/cssprefix.js",
   "devDependencies": {
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
@@ -24,12 +24,12 @@
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "webpack --display-modules"
   },
-  "homepage": "https://github.com/anseki/css-prefix",
+  "homepage": "https://github.com/anseki/cssprefix",
   "repository": {
     "type": "git",
-    "url": "git://github.com/anseki/css-prefix.git"
+    "url": "git://github.com/anseki/cssprefix.git"
   },
-  "bugs": "https://github.com/anseki/css-prefix/issues",
+  "bugs": "https://github.com/anseki/cssprefix/issues",
   "license": "MIT",
   "author": {
     "name": "anseki",
