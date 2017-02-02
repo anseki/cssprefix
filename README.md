@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/cssprefix.svg)](https://www.npmjs.com/package/cssprefix) [![GitHub issues](https://img.shields.io/github/issues/anseki/cssprefix.svg)](https://github.com/anseki/cssprefix/issues) [![dependencies](https://img.shields.io/badge/dependencies-No%20dependency-brightgreen.svg)](package.json) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)
 
-**Since v1.0, the repository name and its package name were unified, and the `css-prefix.min.js` file also was renamed to `cssprefix.min.js`.***
+**Since v1.0, the repository name and its package name were unified, and the `css-prefix.min.js` file also was renamed to `cssprefix.min.js`.**
 
 CSS Prefixer for JavaScript code.
 
