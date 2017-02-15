@@ -16,8 +16,7 @@ const webpack = require('webpack'),
   };
 
 module.exports = {
-  // entry: './src/cssprefix.js',
-  entry: './src/compatible.js', // for Old APIs
+  entry: './src/cssprefix.js',
   output: {
     path: BUILD ? __dirname : path.join(__dirname, 'test'),
     filename: BUILD ? 'cssprefix.min.js' : 'cssprefix.js',
@@ -30,10 +29,26 @@ module.exports = {
         test: /\.js$/,
         exclude: absPath => !BABEL_TARGET_PACKAGES.find(target => absPath.indexOf(target) === 0) &&
           absPath.split(path.sep).includes('node_modules'),
-        use: [{
-          loader: 'babel-loader',
-          options: BABEL_PARAMS
-        }]
+        use: BUILD ? [
+          {
+            loader: 'babel-loader',
+            options: BABEL_PARAMS
+          },
+          {
+            loader: 'skeleton-loader',
+            options: {
+              procedure: content => (content + '')
+                .replace(/[^\n]*\[DEBUG\/\][^\n]*\n?/g, '')
+                .replace(/\/\*\s*\[DEBUG\]\s*\*\/[\s\S]*?\/\*\s*\[\/DEBUG\]\s*\*\//g, '')
+                .replace(/[^\n]*\[DEBUG\][\s\S]*?\[\/DEBUG\][^\n]*\n?/g, '')
+            }
+          }
+        ] : [
+          {
+            loader: 'babel-loader',
+            options: BABEL_PARAMS
+          }
+        ]
       }
     ]
   },

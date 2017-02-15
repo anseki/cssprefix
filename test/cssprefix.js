@@ -64,7 +64,7 @@ var CSSPrefix =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -85,149 +85,177 @@ Object.defineProperty(exports, "__esModule", {
  * Licensed under the MIT license.
  */
 
-// *** Currently, this code except `export` is not ES2015. ***
-
-var CSSPrefix,
-    PREFIXES = ['webkit', 'ms', 'moz', 'o'],
-    PREFIXES_PROP = [],
-    PREFIXES_VALUE = [],
-    rePrefixesProp,
-    rePrefixesValue,
-    props = {},
-    values = {}; // cache
-
 function ucf(text) {
   return text.substr(0, 1).toUpperCase() + text.substr(1);
 }
 
-PREFIXES.forEach(function (prefix) {
-  PREFIXES_PROP.push(prefix);
-  PREFIXES_PROP.push(ucf(prefix));
-  PREFIXES_VALUE.push('-' + prefix + '-');
-});
+var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
+    NAME_PREFIXES = PREFIXES.reduce(function (prefixes, prefix) {
+  prefixes.push(prefix);
+  prefixes.push(ucf(prefix));
+  return prefixes;
+}, []),
+    VALUE_PREFIXES = PREFIXES.map(function (prefix) {
+  return '-' + prefix + '-';
+}),
 
-rePrefixesProp = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i');
-function normalizeProp(prop) {
-  var reUc = /[A-Z]/;
-  // 'ms' and 'Ms' are found by rePrefixesProp. 'i' option
-  return (prop = (prop + '').replace(/-([\da-z])/gi, function (str, p1) {
-    // camelCase
-    return p1.toUpperCase();
-  }).replace(rePrefixesProp, function (str, p1) {
-    return reUc.test(p1) ? p1.toLowerCase() : str;
-  })).toLowerCase() === 'float' ? 'cssFloat' : prop; // for old CSSOM
-}
 
-rePrefixesValue = new RegExp('^(?:' + PREFIXES_VALUE.join('|') + ')', 'i');
-function normalizeValue(value) {
-  return (value + '').replace(rePrefixesValue, '');
-}
+/**
+ * Get sample CSSStyleDeclaration.
+ * @returns {CSSStyleDeclaration}
+ */
+getDeclaration = function () {
+  var declaration = void 0;
+  return function () {
+    return declaration = declaration || document.createElement('div').style;
+  };
+}(),
 
-function getProp(prop, elm) {
-  var style, ucfProp;
-  prop = normalizeProp(prop);
-  if (props[prop] == null) {
-    style = elm.style;
 
-    if (style[prop] != null) {
-      // original
-      props[prop] = prop;
-    } else {
-      // try with prefixes
-      ucfProp = ucf(prop);
-      if (!PREFIXES_PROP.some(function (prefix) {
-        var prefixed = prefix + ucfProp;
-        if (style[prefixed] != null) {
-          props[prop] = prefixed;
-          return true;
-        }
-        return false;
-      })) {
-        props[prop] = '';
+/**
+ * Normalize name.
+ * @param {} propName - A name that is normalized.
+ * @returns {string} - A normalized name.
+ */
+normalizeName = function () {
+  var rePrefixedName = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i'),
+      reUc = /[A-Z]/;
+  return function (propName) {
+    return (propName = (propName + '').replace(/\s/g, '').replace(/-([\da-z])/gi, function (str, p1) {
+      return p1.toUpperCase();
+    }) // camelCase
+    // 'ms' and 'Ms' are found by rePrefixedName 'i' option
+    .replace(rePrefixedName, function (str, p1) {
+      return reUc.test(p1) ? p1.toLowerCase() : str;
+    }) // Remove prefix
+    ).toLowerCase() === 'float' ? 'cssFloat' : propName;
+  }; // For old CSSOM
+}(),
+
+
+/**
+ * Normalize value.
+ * @param {} propValue - A value that is normalized.
+ * @returns {string} - A normalized value.
+ */
+normalizeValue = function () {
+  var rePrefixedValue = new RegExp('^(?:' + VALUE_PREFIXES.join('|') + ')', 'i');
+  return function (propValue) {
+    return (propValue + '').replace(/\s/g, '').replace(rePrefixedValue, '');
+  };
+}(),
+
+
+/**
+ * Polyfill for `CSS.supports`.
+ * @param {string} propName - A name.
+ * @param {string} propValue - A value.
+ * @returns {boolean} - `true` if given pair is accepted.
+ */
+cssSupports = function () {
+  // return window.CSS && window.CSS.supports || ((propName, propValue) => {
+  // `CSS.supports` doesn't find prefixed property.
+  return function (propName, propValue) {
+    var declaration = getDeclaration();
+    // In some browsers, `declaration[prop] = value` updates any property.
+    declaration.setProperty(propName, propValue);
+    return declaration.getPropertyValue(propName) === propValue;
+  };
+}(),
+    propNames = {},
+    propValues = {}; // Cache
+
+// [DEBUG]
+window.normalizeName = normalizeName;
+window.normalizeValue = normalizeValue;
+window.cssSupports = cssSupports;
+// [/DEBUG]
+
+function getName(propName) {
+  propName = normalizeName(propName);
+  if (propName && propNames[propName] == null) {
+    (function () {
+      window.getNameDone = 'get'; // [DEBUG/]
+      var declaration = getDeclaration();
+
+      if (declaration[propName] != null) {
+        // Original
+        propNames[propName] = propName;
+      } else {
+        (function () {
+          // Try with prefixes
+          var ucfName = ucf(propName);
+          if (!NAME_PREFIXES.some(function (prefix) {
+            var prefixed = prefix + ucfName;
+            if (declaration[prefixed] != null) {
+              propNames[propName] = prefixed;
+              return true;
+            }
+            return false;
+          })) {
+            propNames[propName] = false;
+          }
+        })();
       }
-    }
+    })();
   }
-  return props[prop];
+  return propNames[propName] || void 0;
 }
 
-function setValue(elm, prop, value) {
-  var res,
-      style = elm.style,
-      valueArray = Array.isArray(value) ? value : [value];
+function getValue(propName, propValue) {
+  var res = void 0;
 
-  function trySet(prop, value) {
-    style[prop] = value;
-    return style[prop] === value;
-  }
+  if (!(propName = getName(propName))) {
+    return res;
+  } // Invalid property
 
-  if (!(prop = getProp(prop, elm))) {
-    return '';
-  } // Invalid Property
-  values[prop] = values[prop] || {};
-  if (!valueArray.some(function (value) {
-    value = normalizeValue(value);
-    if (values[prop][value] == null) {
+  propValues[propName] = propValues[propName] || {};
+  (Array.isArray(propValue) ? propValue : [propValue]).some(function (propValue) {
+    propValue = normalizeValue(propValue);
+    (window.getValueDone = window.getValueDone || []).push(propValue); // [DEBUG/]
 
-      if (trySet(prop, value)) {
-        // original
-        res = values[prop][value] = value;
-        return true;
-      } else if (PREFIXES_VALUE.some(function (prefix) {
-        // try with prefixes
-        var prefixed = prefix + value;
-        if (trySet(prop, prefixed)) {
-          res = values[prop][value] = prefixed;
-          return true;
-        }
-        return false;
-      })) {
+    if (propValues[propName][propValue] != null) {
+      // Cache
+      if (propValues[propName][propValue] !== false) {
+        res = propValues[propName][propValue];
         return true;
       } else {
-        values[prop][value] = '';
-        return false; // continue to next value
+        return false; // Continue to next value
       }
-    } else if (values[prop][value]) {
-      style[prop] = res = values[prop][value];
+    }
+    window.getValueDone.push('get'); // [DEBUG/]
+
+    if (cssSupports(propName, propValue)) {
+      // Original
+      res = propValues[propName][propValue] = propValue;
       return true;
     }
-    return false;
-  })) {
-    res = '';
-  }
-  return res;
+
+    if (VALUE_PREFIXES.some(function (prefix) {
+      // Try with prefixes
+      var prefixed = prefix + propValue;
+      if (cssSupports(propName, prefixed)) {
+        res = propValues[propName][propValue] = prefixed;
+        return true;
+      }
+      return false;
+    })) {
+      return true;
+    }
+
+    propValues[propName][propValue] = false;
+    return false; // Continue to next value
+  });
+
+  return typeof res === 'string' ? res : void 0; // It might be empty string.
 }
 
-CSSPrefix = {
-  getProp: getProp,
-  setValue: setValue
+var CSSPrefix = {
+  getName: getName,
+  getValue: getValue
 };
 
 exports.default = CSSPrefix;
-module.exports = exports['default'];
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _cssprefix = __webpack_require__(0);
-
-var _cssprefix2 = _interopRequireDefault(_cssprefix);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-window.getStyleProp = _cssprefix2.default.getProp; /*
-                                                    * Old APIs: getStyleProp, setStyleValue
-                                                    */
-
-window.setStyleValue = _cssprefix2.default.setValue;
-exports.default = _cssprefix2.default;
 module.exports = exports['default'];
 
 /***/ })
