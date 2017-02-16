@@ -158,6 +158,9 @@ cssSupports = function () {
   return function (propName, propValue) {
     var declaration = getDeclaration();
     // In some browsers, `declaration[prop] = value` updates any property.
+    propName = propName.replace(/[A-Z]/g, function (str) {
+      return '-' + str.toLowerCase();
+    }); // kebab-case
     declaration.setProperty(propName, propValue);
     return declaration.getPropertyValue(propName) === propValue;
   };

@@ -17,7 +17,7 @@ describe('getValue', function() {
         ['display', 'inline-grid', '-moz-inline-grid']; // IS_GECKO
 
       beforeDone();
-    });
+    },'1');
   });
 
   afterAll(function() {
@@ -45,7 +45,11 @@ describe('getValue', function() {
 
     // Empty string
     window.getValueDone = [];
-    expect(CSSPrefix.getValue('content', ['', 'dummy1', 'dummy2'])).toBe('');
+    expect(CSSPrefix.getValue('animation-name', ['', 'dummy1', 'dummy2'])).toBe('');
+    expect(window.getValueDone).toEqual(['', 'get']);
+
+    window.getValueDone = [];
+    expect(CSSPrefix.getValue('left', ['', 'dummy1', 'dummy2'])).toBe('');
     expect(window.getValueDone).toEqual(['', 'get']);
   });
 
@@ -67,6 +71,15 @@ describe('getValue', function() {
     window.getValueDone = [];
     expect(typeof CSSPrefix.getValue('position', ['dummy1', 'foo', 'dummy2'])).toBe('undefined');
     expect(window.getValueDone).toEqual(['dummy1', 'foo', 'dummy2']);
+
+    // Empty string
+    window.getValueDone = [];
+    expect(CSSPrefix.getValue('animation-name', ['dummy1', '', 'dummy2'])).toBe('dummy1');
+    expect(window.getValueDone).toEqual(['dummy1', 'get']);
+
+    window.getValueDone = [];
+    expect(CSSPrefix.getValue('left', ['dummy1', '', 'dummy2'])).toBe('');
+    expect(window.getValueDone).toEqual(['dummy1', 'get', '']);
   });
 
   it('gets prefixed value from cache first', function() {
@@ -87,6 +100,15 @@ describe('getValue', function() {
     window.getValueDone = [];
     expect(typeof CSSPrefix.getValue('position', ['foo', 'dummy1', 'dummy2'])).toBe('undefined');
     expect(window.getValueDone).toEqual(['foo', 'dummy1', 'dummy2']);
+
+    // Empty string
+    window.getValueDone = [];
+    expect(CSSPrefix.getValue('animation-name', ['', 'dummy1', 'dummy2'])).toBe('');
+    expect(window.getValueDone).toEqual(['']);
+
+    window.getValueDone = [];
+    expect(CSSPrefix.getValue('left', ['', 'dummy1', 'dummy2'])).toBe('');
+    expect(window.getValueDone).toEqual(['']);
   });
 
 });

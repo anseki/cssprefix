@@ -62,6 +62,7 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
     return ((propName, propValue) => {
       const declaration = getDeclaration();
       // In some browsers, `declaration[prop] = value` updates any property.
+      propName = propName.replace(/[A-Z]/g, str => `-${str.toLowerCase()}`); // kebab-case
       declaration.setProperty(propName, propValue);
       return declaration.getPropertyValue(propName) === propValue;
     });
