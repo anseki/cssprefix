@@ -1,6 +1,6 @@
 {
   "name": "cssprefix",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "title": "CSSPrefix",
   "description": "CSS Prefixer for JavaScript code. The simple library to get vendor-prefixed name (e.g. `webkitFlex`) and vendor-prefixed value (e.g. `-moz-inline-grid`) of CSS property. This is not pre-compiler for style-sheet, this is used to handle those in JavaScript code.",
   "keywords": [
