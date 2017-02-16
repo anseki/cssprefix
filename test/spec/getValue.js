@@ -17,7 +17,7 @@ describe('getValue', function() {
         ['display', 'inline-grid', '-moz-inline-grid']; // IS_GECKO
 
       beforeDone();
-    },'1');
+    }, 'getValue');
   });
 
   afterAll(function() {
