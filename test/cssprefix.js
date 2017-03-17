@@ -177,30 +177,26 @@ window.cssSupports = cssSupports;
 function getName(propName) {
   propName = normalizeName(propName);
   if (propName && propNames[propName] == null) {
-    (function () {
-      window.getNameDone = 'get'; // [DEBUG/]
-      var declaration = getDeclaration();
+    window.getNameDone = 'get'; // [DEBUG/]
+    var declaration = getDeclaration();
 
-      if (declaration[propName] != null) {
-        // Original
-        propNames[propName] = propName;
-      } else {
-        (function () {
-          // Try with prefixes
-          var ucfName = ucf(propName);
-          if (!NAME_PREFIXES.some(function (prefix) {
-            var prefixed = prefix + ucfName;
-            if (declaration[prefixed] != null) {
-              propNames[propName] = prefixed;
-              return true;
-            }
-            return false;
-          })) {
-            propNames[propName] = false;
-          }
-        })();
+    if (declaration[propName] != null) {
+      // Original
+      propNames[propName] = propName;
+    } else {
+      // Try with prefixes
+      var ucfName = ucf(propName);
+      if (!NAME_PREFIXES.some(function (prefix) {
+        var prefixed = prefix + ucfName;
+        if (declaration[prefixed] != null) {
+          propNames[propName] = prefixed;
+          return true;
+        }
+        return false;
+      })) {
+        propNames[propName] = false;
       }
-    })();
+    }
   }
   return propNames[propName] || void 0;
 }

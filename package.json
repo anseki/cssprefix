@@ -13,21 +13,23 @@
   "main": "cssprefix.min.js",
   "jsnext:main": "./src/cssprefix.js",
   "devDependencies": {
-    "babel-core": "^6.23.1",
-    "babel-loader": "^6.3.1",
+    "babel-core": "^6.24.0",
+    "babel-loader": "^7.0.0-beta.1",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-es2015": "^6.22.0",
-    "cross-env": "^3.1.4",
+    "babel-preset-es2015": "^6.24.0",
+    "cross-env": "^3.2.4",
     "jasmine-core": "^2.5.2",
-    "log4js": "^1.1.0",
-    "node-static-alias": "^0.1.3",
-    "skeleton-loader": "0.0.7",
-    "test-page-loader": "0.0.11",
+    "log4js": "^1.1.1",
+    "node-static-alias": "^1.0.0",
+    "pre-proc": "^0.2.5",
+    "pre-proc-loader": "^1.0.4",
+    "test-page-loader": "1.0.1",
     "webpack": "^2.2.1"
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
-    "dev": "webpack --display-modules"
+    "dev": "webpack --display-modules",
+    "test": "node ./test/httpd"
   },
   "homepage": "https://github.com/anseki/cssprefix",
   "repository": {
