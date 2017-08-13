@@ -14,7 +14,10 @@ log4js.configure({
   appenders: {
     out: {
       type: 'console',
-      pattern: '%[[%r]%] %m' // Super simple format
+      layout: {
+        type: 'pattern',
+        pattern: '%[[%r]%] %m' // Super simple format
+      }
     }
   },
   categories: {default: {appenders: ['out'], level: 'info'}}
