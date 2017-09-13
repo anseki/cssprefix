@@ -9,12 +9,13 @@ describe('getValue', function() {
       window = pageWindow;
       pageDone = done;
 
+      // [Name, <Normal-Value to try to get>, <Value that should be returned>]
       prefixed =
         window.IS_TRIDENT ? ['display', 'inline-grid', '-ms-inline-grid'] :
         window.IS_EDGE ? ['display', 'inline-grid', '-ms-inline-grid'] :
         window.IS_WEBKIT ? ['cursor', 'grab', '-webkit-grab'] : // But it has bug
         window.IS_BLINK ? ['cursor', 'grab', '-webkit-grab'] :
-        ['display', 'inline-grid', '-moz-inline-grid']; // IS_GECKO
+        ['color', 'default-color', '-moz-default-color']; // IS_GECKO
 
       beforeDone();
     }, 'getValue');
