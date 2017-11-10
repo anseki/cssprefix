@@ -28,7 +28,7 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
   /**
    * Normalize name.
    * @param {} propName - A name that is normalized.
-   * @returns {string} - A normalized name.
+   * @returns {string} A normalized name.
    */
   normalizeName = (() => {
     const rePrefixedName = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i'),
@@ -43,7 +43,7 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
   /**
    * Normalize value.
    * @param {} propValue - A value that is normalized.
-   * @returns {string} - A normalized value.
+   * @returns {string} A normalized value.
    */
   normalizeValue = (() => {
     const rePrefixedValue = new RegExp('^(?:' + VALUE_PREFIXES.join('|') + ')', 'i');
@@ -54,7 +54,7 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
    * Polyfill for `CSS.supports`.
    * @param {string} propName - A name.
    * @param {string} propValue - A value.
-   * @returns {boolean} - `true` if given pair is accepted.
+   * @returns {boolean} `true` if given pair is accepted.
    */
   cssSupports = (() => {
     // return window.CSS && window.CSS.supports || ((propName, propValue) => {
