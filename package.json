@@ -23,6 +23,7 @@
     "node-static-alias": "^1.0.0",
     "pre-proc": "^0.2.7",
     "pre-proc-loader": "^1.0.8",
+    "skeleton-loader": "^1.1.4",
     "test-page-loader": "1.0.3",
     "webpack": "^3.5.4"
   },
