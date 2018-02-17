@@ -33,7 +33,7 @@
     "pre-proc": "^0.2.8",
     "pre-proc-loader": "^1.0.9",
     "skeleton-loader": "^1.1.5",
-    "test-page-loader": "1.0.6",
+    "test-page-loader": "1.0.7",
     "webpack": "^3.11.0"
   },
   "scripts": {
