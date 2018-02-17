@@ -22,19 +22,19 @@
     "LICENSE-MIT"
   ],
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.1.1",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015": "^6.24.1",
-    "cross-env": "^5.0.5",
-    "jasmine-core": "^2.7.0",
-    "log4js": "^2.3.3",
+    "cross-env": "^5.1.3",
+    "jasmine-core": "^2.99.1",
+    "log4js": "^2.5.3",
     "node-static-alias": "^1.0.0",
-    "pre-proc": "^0.2.7",
-    "pre-proc-loader": "^1.0.8",
-    "skeleton-loader": "^1.1.4",
-    "test-page-loader": "1.0.3",
-    "webpack": "^3.5.4"
+    "pre-proc": "^0.2.8",
+    "pre-proc-loader": "^1.0.9",
+    "skeleton-loader": "^1.1.5",
+    "test-page-loader": "1.0.6",
+    "webpack": "^3.11.0"
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
