@@ -13,6 +13,14 @@
   "main": "cssprefix.min.js",
   "module": "./src/cssprefix.js",
   "jsnext:main": "./src/cssprefix.js",
+  "files": [
+    "cssprefix.min.js",
+    "src/*.js",
+    "!src/*.proc.*",
+    "webpack.config.rules.js",
+    "bower.json",
+    "LICENSE-MIT"
+  ],
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
