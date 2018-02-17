@@ -11,6 +11,7 @@
     "value"
   ],
   "main": "cssprefix.min.js",
+  "module": "./src/cssprefix.js",
   "jsnext:main": "./src/cssprefix.js",
   "devDependencies": {
     "babel-core": "^6.25.0",
