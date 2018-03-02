@@ -15,8 +15,7 @@
   "jsnext:main": "cssprefix.esm.js",
   "files": [
     "cssprefix?(-debug).@(min|esm).js",
-    "bower.json",
-    "LICENSE-MIT"
+    "bower.json"
   ],
   "devDependencies": {
     "babel-core": "^6.26.0",
