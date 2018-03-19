@@ -11,10 +11,10 @@
     "value"
   ],
   "main": "cssprefix.min.js",
-  "module": "cssprefix.esm.js",
-  "jsnext:main": "cssprefix.esm.js",
+  "module": "cssprefix.mjs",
+  "jsnext:main": "cssprefix.mjs",
   "files": [
-    "cssprefix?(-debug).@(min|esm).js",
+    "cssprefix?(-debug).@(min.js|mjs)",
     "bower.json"
   ],
   "devDependencies": {
@@ -29,7 +29,8 @@
     "pre-proc-loader": "^1.0.9",
     "skeleton-loader": "^1.1.5",
     "test-page-loader": "^1.0.7",
-    "webpack": "^4.1.1"
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12"
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --verbose",
