@@ -11,10 +11,10 @@
     "value"
   ],
   "main": "cssprefix.min.js",
-  "module": "cssprefix.mjs",
-  "jsnext:main": "cssprefix.mjs",
+  "module": "cssprefix.esm.js",
+  "jsnext:main": "cssprefix.esm.js",
   "files": [
-    "cssprefix?(-debug).@(min.js|mjs)",
+    "cssprefix?(-debug).@(min.js|esm.js)",
     "bower.json"
   ],
   "devDependencies": {
