@@ -33,11 +33,11 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
   normalizeName = (() => {
     const rePrefixedName = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i'),
       reUc = /[A-Z]/;
-    return propName => (propName = (propName + '').replace(/\s/g, '')
+    return propName => ((propName = (propName + '').replace(/\s/g, '')
       .replace(/-([\da-z])/gi, (str, p1) => p1.toUpperCase()) // camelCase
       // 'ms' and 'Ms' are found by rePrefixedName 'i' option
-      .replace(rePrefixedName, (str, p1) => reUc.test(p1) ? p1.toLowerCase() : str) // Remove prefix
-    ).toLowerCase() === 'float' ? 'cssFloat' : propName; // For old CSSOM
+      .replace(rePrefixedName, (str, p1) => (reUc.test(p1) ? p1.toLowerCase() : str)) // Remove prefix
+    ).toLowerCase() === 'float' ? 'cssFloat' : propName); // For old CSSOM
   })(),
 
   /**
@@ -56,19 +56,21 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
    * @param {string} propValue - A value.
    * @returns {boolean} `true` if given pair is accepted.
    */
-  cssSupports = (() => {
+  cssSupports = (() =>
     // return window.CSS && window.CSS.supports || ((propName, propValue) => {
     // `CSS.supports` doesn't find prefixed property.
-    return ((propName, propValue) => {
+    (propName, propValue) => {
       const declaration = getDeclaration();
       // In some browsers, `declaration[prop] = value` updates any property.
       propName = propName.replace(/[A-Z]/g, str => `-${str.toLowerCase()}`); // kebab-case
       declaration.setProperty(propName, propValue);
       return declaration.getPropertyValue(propName) === propValue;
-    });
-  })(),
+    }
+  )(),
 
-  propNames = {}, propValues = {}; // Cache
+  // Cache
+  propNames = {},
+  propValues = {};
 
 // [DEBUG]
 window.normalizeName = normalizeName;
@@ -117,9 +119,8 @@ function getValue(propName, propValue) {
       if (propValues[propName][propValue] !== false) {
         res = propValues[propName][propValue];
         return true;
-      } else {
-        return false; // Continue to next value
       }
+      return false; // Continue to next value
     }
     window.getValueDone.push('get'); // [DEBUG/]
 
@@ -147,8 +148,8 @@ function getValue(propName, propValue) {
 }
 
 const CSSPrefix = {
-  getName: getName,
-  getValue: getValue
+  getName,
+  getValue
 };
 
 export default CSSPrefix;
