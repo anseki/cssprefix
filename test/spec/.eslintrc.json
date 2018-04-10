@@ -1,4 +1,8 @@
 {
   "env": {"browser": true, "jasmine": true},
-  "globals": {"loadPage": false}
+  "globals": {"loadPage": false},
+  "rules": {
+    "no-var": "off",
+    "prefer-arrow-callback": "off"
+  }
 }
