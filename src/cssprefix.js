@@ -48,7 +48,8 @@ const PREFIXES = ['webkit', 'moz', 'ms', 'o'],
    */
   normalizeValue = (() => {
     const rePrefixedValue = new RegExp('^(?:' + VALUE_PREFIXES.join('|') + ')', 'i');
-    return propValue => (propValue + '').replace(/\s/g, '').replace(rePrefixedValue, '');
+    return propValue =>
+      (propValue != null ? (propValue + '') : '').replace(/\s/g, '').replace(rePrefixedValue, '');
   })(),
 
   /**
