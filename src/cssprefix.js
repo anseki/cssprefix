@@ -8,7 +8,7 @@
 
 function ucf(text) { return text.substr(0, 1).toUpperCase() + text.substr(1); }
 
-const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
+const PREFIXES = ['webkit', 'moz', 'ms', 'o'],
   NAME_PREFIXES = PREFIXES.reduce((prefixes, prefix) => {
     prefixes.push(prefix);
     prefixes.push(ucf(prefix));
@@ -22,6 +22,7 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
    */
   getDeclaration = (() => {
     let declaration;
+    window.setDeclaration = newDec => { declaration = newDec; }; // [DEBUG/]
     return () => (declaration = declaration || document.createElement('div').style);
   })(),
 
