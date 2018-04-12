@@ -89,6 +89,10 @@ const PREFIXES = ['webkit', 'moz', 'ms', 'o'],
 window.normalizeName = normalizeName;
 window.normalizeValue = normalizeValue;
 window.cssSupports = cssSupports;
+window.clearCache = function() {
+  Object.keys(propNames).forEach(key => { delete propNames[key]; });
+  Object.keys(propValues).forEach(key => { delete propValues[key]; });
+};
 // [/DEBUG]
 
 function getName(propName) {

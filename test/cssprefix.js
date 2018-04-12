@@ -93,7 +93,7 @@ function ucf(text) {
   return text.substr(0, 1).toUpperCase() + text.substr(1);
 }
 
-var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
+var PREFIXES = ['webkit', 'moz', 'ms', 'o'],
     NAME_PREFIXES = PREFIXES.reduce(function (prefixes, prefix) {
   prefixes.push(prefix);
   prefixes.push(ucf(prefix));
@@ -110,6 +110,9 @@ var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
  */
 getDeclaration = function () {
   var declaration = void 0;
+  window.setDeclaration = function (newDec) {
+    declaration = newDec;
+  }; // [DEBUG/]
   return function () {
     return declaration = declaration || document.createElement('div').style;
   };
@@ -145,7 +148,7 @@ normalizeName = function () {
 normalizeValue = function () {
   var rePrefixedValue = new RegExp('^(?:' + VALUE_PREFIXES.join('|') + ')', 'i');
   return function (propValue) {
-    return (propValue + '').replace(/\s/g, '').replace(rePrefixedValue, '');
+    return (propValue != null ? propValue + '' : '').replace(/\s/g, '').replace(rePrefixedValue, '');
   };
 }(),
 
@@ -157,25 +160,49 @@ normalizeValue = function () {
  * @returns {boolean} `true` if given pair is accepted.
  */
 cssSupports = function () {
-  // return window.CSS && window.CSS.supports || ((propName, propValue) => {
-  // `CSS.supports` doesn't find prefixed property.
-  return function (propName, propValue) {
-    var declaration = getDeclaration();
-    // In some browsers, `declaration[prop] = value` updates any property.
-    propName = propName.replace(/[A-Z]/g, function (str) {
-      return '-' + str.toLowerCase();
-    }); // kebab-case
-    declaration.setProperty(propName, propValue);
-    return declaration.getPropertyValue(propName) === propValue;
-  };
+  return (
+    // return window.CSS && window.CSS.supports || ((propName, propValue) => {
+    // `CSS.supports` doesn't find prefixed property.
+    function (propName, propValue) {
+      /*
+      The document below maybe is incorrect,
+      https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration/setProperty
+      by the document below,
+      https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration
+      the `value` argument must be specified, otherwise it throws an error.
+      And also, it does nothing when `undefined` is specified, it does not treat it as the empty string,
+      but it treats `null` as the empty string.
+      In any case, the `propValue` should be checked before the `cssSupports` is called.
+      */
+      var declaration = getDeclaration();
+      // In some browsers, `declaration[prop] = value` updates any property.
+      propName = propName.replace(/[A-Z]/g, function (str) {
+        return '-' + str.toLowerCase();
+      }); // kebab-case
+      declaration.setProperty(propName, propValue);
+      return declaration[propName] != null && // Because getPropertyValue returns '' if it is unsupported
+      declaration.getPropertyValue(propName) === propValue;
+    }
+  );
 }(),
-    propNames = {},
-    propValues = {}; // Cache
+
+
+// Cache
+propNames = {},
+    propValues = {};
 
 // [DEBUG]
 window.normalizeName = normalizeName;
 window.normalizeValue = normalizeValue;
 window.cssSupports = cssSupports;
+window.clearCache = function () {
+  Object.keys(propNames).forEach(function (key) {
+    delete propNames[key];
+  });
+  Object.keys(propValues).forEach(function (key) {
+    delete propValues[key];
+  });
+};
 // [/DEBUG]
 
 function getName(propName) {
@@ -222,9 +249,8 @@ function getValue(propName, propValue) {
       if (propValues[propName][propValue] !== false) {
         res = propValues[propName][propValue];
         return true;
-      } else {
-        return false; // Continue to next value
       }
+      return false; // Continue to next value
     }
     window.getValueDone.push('get'); // [DEBUG/]
 
