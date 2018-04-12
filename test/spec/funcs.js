@@ -85,24 +85,56 @@ describe('functions', function() {
     expect(normalizeValue(' foo-ms-bar  ')).toBe('foo-ms-bar');
     expect(normalizeValue(' foo-moz-bar  ')).toBe('foo-moz-bar');
     expect(normalizeValue(' foo-o-bar  ')).toBe('foo-o-bar');
+
+    // undefined -> ''
+    expect(normalizeValue()).toBe('');
   });
 
-  it('cssSupports', function() {
-    var cssSupports = window.cssSupports;
+  describe('cssSupports', function() {
+    var cssSupports;
 
-    expect(cssSupports('position', 'absolute')).toBe(true);
-    expect(cssSupports('position', 'foo')).toBe(false);
-    expect(cssSupports('position')).toBe(false);
-    expect(cssSupports('foo', 'absolute')).toBe(false);
+    beforeAll(function(done) {
+      cssSupports = window.cssSupports;
+      done();
+    });
 
-    var prefixed =
-        window.IS_TRIDENT ? 'msScrollLimit' :
-        window.IS_EDGE ? 'msScrollLimit' :
-        window.IS_WEBKIT ? 'webkitBorderFit' :
-        window.IS_BLINK ? 'webkitBorderBefore' :
-        'MozBorderEnd', // IS_GECKO
-      value = window.document.body.style[prefixed];
-    expect(cssSupports(prefixed, value)).toBe(true);
+    it('should return true if supported name and value are passed', function() {
+      window.setDeclaration(); // Reset
+      expect(cssSupports('position', 'absolute')).toBe(true);
+    });
+
+    it('should return false if supported name and unsupported value are passed', function() {
+      window.setDeclaration(); // Reset
+      expect(cssSupports('position', 'foo')).toBe(false);
+    });
+
+    it('should return true if supported name and empty string as value are passed', function() {
+      window.setDeclaration(); // Reset
+      expect(cssSupports('position', '')).toBe(true);
+    });
+
+    it('should return false if unsupported name is passed', function() {
+      window.setDeclaration(); // Reset
+      expect(cssSupports('foo', 'absolute')).toBe(false);
+    });
+
+    it('should return false if unsupported name and empty string as value are passed', function() {
+      window.setDeclaration(); // Reset
+      expect(cssSupports('foo', '')).toBe(false);
+    });
+
+    top.NAME_VALUE.forEach(function(testCase) {
+      var propName = testCase.propName;
+      testCase.envs.forEach(function(env) {
+        it('prefixed value - `' + propName + ': ' + env.actualValue +
+            '` in ' + env.envClass, function() {
+          // Setup Stub for CSSStyleDeclaration
+          window.setupStub(propName, env.actualValue);
+          expect(cssSupports(propName, env.actualValue)).toBe(true);
+          expect(cssSupports(propName, env.actualValue + '-INVALID')).toBe(false);
+        });
+      });
+    });
   });
 
 });
