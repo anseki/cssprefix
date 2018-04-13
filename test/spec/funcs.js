@@ -1,4 +1,3 @@
-
 describe('functions', function() {
   'use strict';
 
@@ -123,13 +122,15 @@ describe('functions', function() {
       expect(cssSupports('foo', '')).toBe(false);
     });
 
-    top.NAME_VALUE.forEach(function(testCase) {
+    top.VALUE_DATA.forEach(function(testCase) {
       var propName = testCase.propName;
       testCase.envs.forEach(function(env) {
+
         it('prefixed value - `' + propName + ': ' + env.actualValue +
             '` in ' + env.envClass, function() {
           // Setup Stub for CSSStyleDeclaration
           window.setupStub(propName, env.actualValue);
+
           expect(cssSupports(propName, env.actualValue)).toBe(true);
           expect(cssSupports(propName, env.actualValue + '-INVALID')).toBe(false);
         });
