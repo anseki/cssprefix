@@ -14,7 +14,7 @@ function ucf(text) {
   return text.substr(0, 1).toUpperCase() + text.substr(1);
 }
 
-var PREFIXES = ['webkit', 'ms', 'moz', 'o'],
+var PREFIXES = ['webkit', 'moz', 'ms', 'o'],
     NAME_PREFIXES = PREFIXES.reduce(function (prefixes, prefix) {
   prefixes.push(prefix);
   prefixes.push(ucf(prefix));
@@ -66,7 +66,7 @@ normalizeName = function () {
 normalizeValue = function () {
   var rePrefixedValue = new RegExp('^(?:' + VALUE_PREFIXES.join('|') + ')', 'i');
   return function (propValue) {
-    return (propValue + '').replace(/\s/g, '').replace(rePrefixedValue, '');
+    return (propValue != null ? propValue + '' : '').replace(/\s/g, '').replace(rePrefixedValue, '');
   };
 }(),
 
@@ -75,24 +75,31 @@ normalizeValue = function () {
  * Polyfill for `CSS.supports`.
  * @param {string} propName - A name.
  * @param {string} propValue - A value.
+ *     Since `CSSStyleDeclaration.setProperty` might return unexpected result,
+ *     the `propValue` should be checked before the `cssSupports` is called.
  * @returns {boolean} `true` if given pair is accepted.
  */
 cssSupports = function () {
-  // return window.CSS && window.CSS.supports || ((propName, propValue) => {
-  // `CSS.supports` doesn't find prefixed property.
-  return function (propName, propValue) {
-    var declaration = getDeclaration();
-    // In some browsers, `declaration[prop] = value` updates any property.
-    propName = propName.replace(/[A-Z]/g, function (str) {
-      return '-' + str.toLowerCase();
-    }); // kebab-case
-    declaration.setProperty(propName, propValue);
-    return declaration.getPropertyValue(propName) === propValue;
-  };
+  return (
+    // return window.CSS && window.CSS.supports || ((propName, propValue) => {
+    // `CSS.supports` doesn't find prefixed property.
+    function (propName, propValue) {
+      var declaration = getDeclaration();
+      // In some browsers, `declaration[prop] = value` updates any property.
+      propName = propName.replace(/[A-Z]/g, function (str) {
+        return '-' + str.toLowerCase();
+      }); // kebab-case
+      declaration.setProperty(propName, propValue);
+      return declaration[propName] != null && // Because getPropertyValue returns '' if it is unsupported
+      declaration.getPropertyValue(propName) === propValue;
+    }
+  );
 }(),
-    propNames = {},
-    propValues = {}; // Cache
 
+
+// Cache
+propNames = {},
+    propValues = {};
 
 function getName(propName) {
   propName = normalizeName(propName);
@@ -136,9 +143,8 @@ function getValue(propName, propValue) {
       if (propValues[propName][propValue] !== false) {
         res = propValues[propName][propValue];
         return true;
-      } else {
-        return false; // Continue to next value
       }
+      return false; // Continue to next value
     }
 
     if (cssSupports(propName, propValue)) {

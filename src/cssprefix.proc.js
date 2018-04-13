@@ -12,7 +12,7 @@
 
 function ucf(text) { return text.substr(0, 1).toUpperCase() + text.substr(1); }
 
-const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
+const PREFIXES = ['webkit', 'moz', 'ms', 'o'],
   NAME_PREFIXES = PREFIXES.reduce((prefixes, prefix) => {
     prefixes.push(prefix);
     prefixes.push(ucf(prefix));
@@ -37,11 +37,11 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
   normalizeName = (() => {
     const rePrefixedName = new RegExp('^(?:' + PREFIXES.join('|') + ')(.)', 'i'),
       reUc = /[A-Z]/;
-    return propName => (propName = (propName + '').replace(/\s/g, '')
+    return propName => ((propName = (propName + '').replace(/\s/g, '')
       .replace(/-([\da-z])/gi, (str, p1) => p1.toUpperCase()) // camelCase
       // 'ms' and 'Ms' are found by rePrefixedName 'i' option
-      .replace(rePrefixedName, (str, p1) => reUc.test(p1) ? p1.toLowerCase() : str) // Remove prefix
-    ).toLowerCase() === 'float' ? 'cssFloat' : propName; // For old CSSOM
+      .replace(rePrefixedName, (str, p1) => (reUc.test(p1) ? p1.toLowerCase() : str)) // Remove prefix
+    ).toLowerCase() === 'float' ? 'cssFloat' : propName); // For old CSSOM
   })(),
 
   /**
@@ -51,28 +51,34 @@ const PREFIXES = ['webkit', 'ms', 'moz', 'o'],
    */
   normalizeValue = (() => {
     const rePrefixedValue = new RegExp('^(?:' + VALUE_PREFIXES.join('|') + ')', 'i');
-    return propValue => (propValue + '').replace(/\s/g, '').replace(rePrefixedValue, '');
+    return propValue =>
+      (propValue != null ? (propValue + '') : '').replace(/\s/g, '').replace(rePrefixedValue, '');
   })(),
 
   /**
    * Polyfill for `CSS.supports`.
    * @param {string} propName - A name.
    * @param {string} propValue - A value.
+   *     Since `CSSStyleDeclaration.setProperty` might return unexpected result,
+   *     the `propValue` should be checked before the `cssSupports` is called.
    * @returns {boolean} `true` if given pair is accepted.
    */
-  cssSupports = (() => {
+  cssSupports = (() =>
     // return window.CSS && window.CSS.supports || ((propName, propValue) => {
     // `CSS.supports` doesn't find prefixed property.
-    return ((propName, propValue) => {
+    (propName, propValue) => {
       const declaration = getDeclaration();
       // In some browsers, `declaration[prop] = value` updates any property.
       propName = propName.replace(/[A-Z]/g, str => `-${str.toLowerCase()}`); // kebab-case
       declaration.setProperty(propName, propValue);
-      return declaration.getPropertyValue(propName) === propValue;
-    });
-  })(),
+      return declaration[propName] != null && // Because getPropertyValue returns '' if it is unsupported
+        declaration.getPropertyValue(propName) === propValue;
+    }
+  )(),
 
-  propNames = {}, propValues = {}; // Cache
+  // Cache
+  propNames = {},
+  propValues = {};
 
 
 function getName(propName) {
@@ -114,9 +120,8 @@ function getValue(propName, propValue) {
       if (propValues[propName][propValue] !== false) {
         res = propValues[propName][propValue];
         return true;
-      } else {
-        return false; // Continue to next value
       }
+      return false; // Continue to next value
     }
 
     if (cssSupports(propName, propValue)) { // Original
@@ -143,8 +148,8 @@ function getValue(propName, propValue) {
 }
 
 const CSSPrefix = {
-  getName: getName,
-  getValue: getValue
+  getName,
+  getValue
 };
 
 export default CSSPrefix;

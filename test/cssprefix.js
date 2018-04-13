@@ -157,6 +157,8 @@ normalizeValue = function () {
  * Polyfill for `CSS.supports`.
  * @param {string} propName - A name.
  * @param {string} propValue - A value.
+ *     Since `CSSStyleDeclaration.setProperty` might return unexpected result,
+ *     the `propValue` should be checked before the `cssSupports` is called.
  * @returns {boolean} `true` if given pair is accepted.
  */
 cssSupports = function () {
@@ -164,16 +166,6 @@ cssSupports = function () {
     // return window.CSS && window.CSS.supports || ((propName, propValue) => {
     // `CSS.supports` doesn't find prefixed property.
     function (propName, propValue) {
-      /*
-      The document below maybe is incorrect,
-      https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration/setProperty
-      by the document below,
-      https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration
-      the `value` argument must be specified, otherwise it throws an error.
-      And also, it does nothing when `undefined` is specified, it does not treat it as the empty string,
-      but it treats `null` as the empty string.
-      In any case, the `propValue` should be checked before the `cssSupports` is called.
-      */
       var declaration = getDeclaration();
       // In some browsers, `declaration[prop] = value` updates any property.
       propName = propName.replace(/[A-Z]/g, function (str) {
