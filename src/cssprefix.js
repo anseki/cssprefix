@@ -2,7 +2,7 @@
  * CSSPrefix
  * https://github.com/anseki/cssprefix
  *
- * Copyright (c) 2018 anseki
+ * Copyright (c) 2021 anseki
  * Licensed under the MIT license.
  */
 
