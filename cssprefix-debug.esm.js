@@ -9,7 +9,6 @@
  * Copyright (c) 2018 anseki
  * Licensed under the MIT license.
  */
-
 function ucf(text) {
   return text.substr(0, 1).toUpperCase() + text.substr(1);
 }
@@ -21,24 +20,25 @@ var PREFIXES = ['webkit', 'moz', 'ms', 'o'],
   return prefixes;
 }, []),
     VALUE_PREFIXES = PREFIXES.map(function (prefix) {
-  return '-' + prefix + '-';
+  return "-".concat(prefix, "-");
 }),
-
 
 /**
  * Get sample CSSStyleDeclaration.
  * @returns {CSSStyleDeclaration}
  */
 getDeclaration = function () {
-  var declaration = void 0;
+  var declaration;
+
   window.setDeclaration = function (newDec) {
     declaration = newDec;
   }; // [DEBUG/]
+
+
   return function () {
     return declaration = declaration || document.createElement('div').style;
   };
 }(),
-
 
 /**
  * Normalize name.
@@ -60,7 +60,6 @@ normalizeName = function () {
   }; // For old CSSOM
 }(),
 
-
 /**
  * Normalize value.
  * @param {} propValue - A value that is normalized.
@@ -73,7 +72,6 @@ normalizeValue = function () {
   };
 }(),
 
-
 /**
  * Polyfill for `CSS.supports`.
  * @param {string} propName - A name.
@@ -83,31 +81,30 @@ normalizeValue = function () {
  * @returns {boolean} `true` if given pair is accepted.
  */
 cssSupports = function () {
-  return (
-    // return window.CSS && window.CSS.supports || ((propName, propValue) => {
+  return (// return window.CSS && window.CSS.supports || ((propName, propValue) => {
     // `CSS.supports` doesn't find prefixed property.
     function (propName, propValue) {
-      var declaration = getDeclaration();
-      // In some browsers, `declaration[prop] = value` updates any property.
+      var declaration = getDeclaration(); // In some browsers, `declaration[prop] = value` updates any property.
+
       propName = propName.replace(/[A-Z]/g, function (str) {
-        return '-' + str.toLowerCase();
+        return "-".concat(str.toLowerCase());
       }); // kebab-case
+
       declaration.setProperty(propName, propValue);
       return declaration[propName] != null && // Because getPropertyValue returns '' if it is unsupported
       declaration.getPropertyValue(propName) === propValue;
     }
   );
 }(),
-
-
-// Cache
+    // Cache
 propNames = {},
-    propValues = {};
+    propValues = {}; // [DEBUG]
 
-// [DEBUG]
+
 window.normalizeName = normalizeName;
 window.normalizeValue = normalizeValue;
 window.cssSupports = cssSupports;
+
 window.clearCache = function () {
   Object.keys(propNames).forEach(function (key) {
     delete propNames[key];
@@ -115,13 +112,15 @@ window.clearCache = function () {
   Object.keys(propValues).forEach(function (key) {
     delete propValues[key];
   });
-};
-// [/DEBUG]
+}; // [/DEBUG]
+
 
 function getName(propName) {
   propName = normalizeName(propName);
+
   if (propName && propNames[propName] == null) {
     window.getNameDone = 'get'; // [DEBUG/]
+
     var declaration = getDeclaration();
 
     if (declaration[propName] != null) {
@@ -130,27 +129,32 @@ function getName(propName) {
     } else {
       // Try with prefixes
       var ucfName = ucf(propName);
+
       if (!NAME_PREFIXES.some(function (prefix) {
         var prefixed = prefix + ucfName;
+
         if (declaration[prefixed] != null) {
           propNames[propName] = prefixed;
           return true;
         }
+
         return false;
       })) {
         propNames[propName] = false;
       }
     }
   }
+
   return propNames[propName] || void 0;
 }
 
 function getValue(propName, propValue) {
-  var res = void 0;
+  var res;
 
   if (!(propName = getName(propName))) {
     return res;
   } // Invalid property
+
 
   propValues[propName] = propValues[propName] || {};
   (Array.isArray(propValue) ? propValue : [propValue]).some(function (propValue) {
@@ -163,8 +167,10 @@ function getValue(propName, propValue) {
         res = propValues[propName][propValue];
         return true;
       }
+
       return false; // Continue to next value
     }
+
     window.getValueDone.push('get'); // [DEBUG/]
 
     if (cssSupports(propName, propValue)) {
@@ -176,10 +182,12 @@ function getValue(propName, propValue) {
     if (VALUE_PREFIXES.some(function (prefix) {
       // Try with prefixes
       var prefixed = prefix + propValue;
+
       if (cssSupports(propName, prefixed)) {
         res = propValues[propName][propValue] = prefixed;
         return true;
       }
+
       return false;
     })) {
       return true;
@@ -188,7 +196,6 @@ function getValue(propName, propValue) {
     propValues[propName][propValue] = false;
     return false; // Continue to next value
   });
-
   return typeof res === 'string' ? res : void 0; // It might be empty string.
 }
 
@@ -196,5 +203,4 @@ var CSSPrefix = {
   getName: getName,
   getValue: getValue
 };
-
 export default CSSPrefix;
